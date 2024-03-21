@@ -1,56 +1,60 @@
-# Django ToDo list
+# Validation Instructions for the ToDo App Deployment
 
-This is a todo list web application with basic features of most web apps, i.e., accounts/login, API, and interactive UI. To do this task, you will need:
+Before validating the deployment of the ToDo app on Kubernetes, you must first run the bootstrap.sh script to set up all the necessary resources in your Kubernetes cluster.
 
-- CSS | [Skeleton](http://getskeleton.com/)
-- JS  | [jQuery](https://jquery.com/)
+Initial Setup: Running the *bootstrap.sh* Script
+Navigate to the root folder of your cloned repository and execute the bootstrap.sh script to deploy the necessary Kubernetes resources:
+```bash
+# Navigate to the root directory where bootstrap.sh is located
+cd path/to/root/folder
 
-## Explore
+# Make the script executable
+chmod +x bootstrap.sh
 
-Try it out by installing the requirements (the following commands work only with Python 3.8 and higher, due to Django 4):
-
+# Run the bootstrap.sh script
+./bootstrap.sh
 ```
-pip install -r requirements.txt
+This script will apply configurations for namespaces, persistent volumes, persistent volume claims, config maps, secrets, and other necessary resources.
+
+Follow these steps to validate that the application is correctly set up and functioning as intended.
+
+## 1. Check if the App is Running
+
+To ensure the ToDo app is up and running, you can check the status of the pods and ensure that the service is accessible:
+
+```bash
+kubectl get pods -n todoapp
+```
+If the pod is running, you should see its status as 'Running'.
+
+## 2. Validate ConfigMap Data Mounting
+
+ConfigMaps are used to store configuration settings that can be mounted as files within the pod. To check if the ConfigMap data is correctly mounted:
+
+Check the mounted ConfigMap:
+```bash
+kubectl exec -it <pod-name> -n todoapp -- ls //app/configs
 ```
 
-Create a database schema:
+Replace <pod-name> with the actual name of your pod.
 
+## 3. Validate Secret Data Mounting
+
+Secrets are used to store sensitive information, which can also be mounted as files within the pod. To confirm if the secret data is properly mounted:
+
+Check the mounted secret:
+```bash
+kubectl exec -it <pod-name> -n todoapp -- ls //app/secrets
 ```
-python manage.py migrate
+
+Again, replace <pod-name> with the name of your pod.
+
+## 4.Output 'cat counter.txt' from a Pod
+
+you can use the following command:
+
+```bash
+kubectl exec -it <pod-name> -n todoapp -- cat //app/data/counter.txt
 ```
 
-And then start the server (default is http://localhost:8000):
-
-```
-python manage.py runserver
-```
-
-Now you can browse the [API](http://localhost:8000/api/) or start on the [landing page](http://localhost:8000/).
-
-## Task
-
-Create a kubernetes manifest for a pod which will containa ToDo app container:
-
-1. Fork this repository.
-2. Create a `pv.yml` file for `PersistentVolume` resource.
-3. `PersistentVolume` requirements:
-    1. `PersistentVolume` persistentVolumeReclaimPolicy `Delete`
-    2. `PersistentVolume` class `standard`
-    3. `PersistentVolume` accessModes `ReadWriteMany`
-    4. `PersistentVolume` capacity `1Gi`
-    5. `PersistentVolume` should use `hostPath`
-1. Create a `pvc.yml` file for `PersitentVolumeClaim` resource.
-1. `PersitentVolumeClaim` requirements:
-    1. `PersitentVolumeClaim` should claim a `PersistentVolume` from a pvc file.
-    2. `Deployment` should use `PersistentVolume` throught the `PersitentVolumeClaim`
-    3. `PersistentVolume` mount path should be `/app/data`
-1. Other Requirements
-    1. Mount existing configMap as file into /app/configs folder inside container. It should be a read-only mount
-    2. Mount existing secret as files into /app/secrets folder inside container. It should be a read-only mount
-1. `bootstrap.sh` should containe all the commands to deploy all the required resources in the cluster
-1. `README.md` should have instructuions on how to validate:
-    1. App is running
-    1. ConfigMap data is mounted as files in a right order
-    1. Secret data is mounted as file
-    1. How Output 'cat counter.txt' from a pod
-1. Create PR with your changes and attach it for validation on a platform.
+This command will output the content of counter.txt located in the /app/data directory within your pod.
