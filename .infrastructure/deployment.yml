@@ -68,8 +68,8 @@ spec:
         - name: config-volume
           configMap:
             name: app-config
-            defaultMode: 0410
+            defaultMode: 0400
         - name: secret-volume
           secret: 
             secretName: app-secret
-            defaultMode: 0410
+            defaultMode: 0400
