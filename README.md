@@ -54,3 +54,23 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     1. Secret data is mounted as file
     1. How Output 'cat counter.txt' from a pod
 1. Create PR with your changes and attach it for validation on a platform.
+
+***
+
+# Instructions how to validate app
+### How to check a running application
+```
+kubectl get pods -n todoapp
+```
+### How to check mounted ConfigMap data run
+```
+kubectl exec -it <pod_name> -n todoapp -- ls //app/configs
+```
+### How to check mounted secret data run
+```
+kubectl exec -it <pod_name> -n todoapp -- ls //app/secrets
+```
+### How to get output from pod run
+```
+kubectl exec -it <pod_name> -n todoapp -- cat //app/data/counter.txt
+```
