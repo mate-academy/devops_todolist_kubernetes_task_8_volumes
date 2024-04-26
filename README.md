@@ -55,6 +55,8 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     1. How Output 'cat counter.txt' from a pod
 1. Create PR with your changes and attach it for validation on a platform.
 
+## Create a namespace:
+$kubectl create namespace todoapp
 
 ## Create a script to deploy all resources:
 #!/bin/bash
