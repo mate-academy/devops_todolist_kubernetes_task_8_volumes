@@ -65,6 +65,6 @@ $/path/to/your/script/bootstrap.sh
 $kubectl get pods -n todoapp
 $kubectl exec -it <pod-name> -n todoapp -- ls /app/configs
 $kubectl exec -it <pod-name> -n todoapp -- ls /app/secrets
-if you use Windows: 
+if you use git bash for Windows: 
 $kubectl exec -it <pod-name> -n todoapp -- ls //app/configs
 $kubectl exec -it <pod-name> -n todoapp -- ls //app/secrets
