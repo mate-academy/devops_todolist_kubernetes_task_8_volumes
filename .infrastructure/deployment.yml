@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todoapp
+  name: todoapp-deployment
   namespace: todoapp
 spec:
   strategy:
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: todoapp
-        image: ikulyk404/todoapp:3.0.0
+        image: yaaszp/todoapp:3.0.0
         resources:
           requests:
             memory: "256Mi"
@@ -27,22 +27,31 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "150m"
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: todoapp-secret-volume
+          mountPath: /app/secrets
+          readOnly: True
+        - name: todoapp-configmap-volume
+          mountPath: /app/configmap
+          readOnly: True
         env:
         - name: PYTHONUNBUFFERED
           valueFrom:
             configMapKeyRef:
-              name: app-config
+              name: todoapp-config
               key: PYTHONUNBUFFERED
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: app-secret
+              name: todoapp-secret
               key: SECRET_KEY
         ports:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: api/alive
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
@@ -52,3 +61,15 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: todoapp-pvc-data
+      - name: todoapp-secret-volume
+        secret:
+          secretName: todoapp-secret
+      - name: todoapp-configmap-volume
+        configMap:
+          name: todoapp-configmap
+
+

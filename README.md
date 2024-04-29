@@ -54,3 +54,21 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     1. Secret data is mounted as file
     1. How Output 'cat counter.txt' from a pod
 1. Create PR with your changes and attach it for validation on a platform.
+
+
+kubectl config current-context
+In order to start the application you should execute in CLI the file bootstrap.sh
+After start the application will be access by url
+http://localhost:30007/
+
+Also you can start the application using the next coomands
+kind create cluster --config cluster.yml
+kubectl apply -f namespace.yml
+kubectl apply -f clusterIp.yml
+kubectl apply -f nodeport.yml
+kubectl apply -f configMap.yml
+kubectl apply -f secret.yml
+kubectl apply -f pv.yml
+kubectl apply -f pvc.yml
+kubectl apply -f deployment.yml
+kubectl apply -f hpa.yml
