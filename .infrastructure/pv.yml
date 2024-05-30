@@ -2,7 +2,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: todoapp-pv
-spec: 
+  namespace: todoapp
+spec:
   capacity:
     storage: 1Gi
   accessModes:
