@@ -19,4 +19,7 @@ kubectl apply -f .infrastructure/secret.yml -n todoapp
 # Apply Deployment
 kubectl apply -f .infrastructure/deployment.yml -n todoapp
 
+# Apply Service
+kubectl apply -f .infrastructure/nodeport.yml -n todoapp
+
 echo "All resources have been deployed successfully."
