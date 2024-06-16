@@ -20,6 +20,15 @@ spec:
       containers:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: config
+          mountPath: /app/configs
+          readOnly: true
+        -name: secret
+          mountPath: /app/secrets
+          readOnly: true
         resources:
           requests:
             memory: "256Mi"
@@ -27,6 +36,16 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "150m"
+        volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-data-todoapp
+        -name: config
+          configMap:
+            name: app-config
+        -name: secret
+          secret:
+            secretName: app-secret
         env:
         - name: PYTHONUNBUFFERED
           valueFrom:
