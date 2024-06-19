@@ -1,4 +1,4 @@
-yml#!/bin/bash
+#!/bin/bash
 
 kubectl apply -f .\.infrastructure\namespace.yml
 kubectl apply -f .\.infrastructure\confgiMap.yml
