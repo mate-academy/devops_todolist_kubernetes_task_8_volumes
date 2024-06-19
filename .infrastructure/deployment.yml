@@ -44,11 +44,30 @@ spec:
           httpGet:
             path: api/health
             port: 8080
-          initialDelaySeconds: 60
+          initialDelaySeconds: 10
           periodSeconds: 5
         readinessProbe:
           httpGet:
             path: api/ready
             port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 40
+          periodSeconds: 10
+        volumeMounts:
+        - name: data
+          mountPath: /app/data/
+        - name: configs-volume
+          mountPath: /app/configs/
+          readOnly: true
+        - name: secrets-volume
+          mountPath: /app/secrets/
+          readOnly: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-data
+      - name: configs-volume
+        configMap:
+          name: app-config
+      - name: secrets-volume
+        secret:
+          secretName: app-secret

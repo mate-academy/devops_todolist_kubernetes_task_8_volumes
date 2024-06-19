@@ -54,3 +54,50 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     1. Secret data is mounted as file
     1. How Output 'cat counter.txt' from a pod
 1. Create PR with your changes and attach it for validation on a platform.
+
+
+---
+
+# SOLUTION
+
+1. We need to install kind.exe
+
+    for this we need to
+
+    1) download it
+
+    2) transfer to suitable folder
+
+    ```
+    curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.23.0/kind-windows-amd64
+    Move-Item .\kind-windows-amd64.exe C:\Program Files\Docker\kind\kind.exe
+    ```
+
+    3) add to windows environment variables path
+        - settings -> about -> advanced -> advanced -> environment variables -> system -> path -> change -> add address with kind.exe
+2. delete cluster
+
+    ```
+    kind delete cluster
+    ```
+3. create modified cluster (prepared by mateacademy)
+
+    ```
+    kind create cluster --config .\cluster.yml
+    ```
+
+    wait until creation is succefull
+4. apply all manifests (commands described in bootstrap.sh)
+5. connect to shell of any pod
+
+    ```
+    kubectl exec -it todoapp-788658c587-fjsmq -n todoapp -- sh
+    ```
+
+    - we are in the app directory
+
+    - now we can check the
+
+      `cat ./secrets/SECRET_KEY`
+
+      `cat ./configs/PYTHONUNBUFFERED`
