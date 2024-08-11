@@ -52,3 +52,22 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+          - mountPath: /app/data
+            name: data-volume
+          - mountPath: /app/configs
+            name: config-volume
+            readOnly: true
+          - mountPath: /app/secrets
+            name: secret-volume
+            readOnly: true
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: pvc-data
+        - name: config-volume
+          configMap:
+            name: app-config
+        - name: secret-volume
+          secret:
+            secretName: app-secret
