@@ -53,3 +53,15 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     1. ConfigMap data is mounted as files in a right order
     1. Secret data is mounted as file
 1. Create PR with your changes and attach it for validation on a platform.
+
+To validate that app is running open aplication by link
+
+    http://localhost:30007/
+
+To check that configMap and secret are mounted use next command
+
+    # kubectl exec -it <working pod name> sh
+    # ls
+    Dockerfile  accounts  api  configs  data  db.sqlite3  lists  manage.py  probes  requirements.txt  secrets  todolist
+
+If you see configs and secrets mount is correct
