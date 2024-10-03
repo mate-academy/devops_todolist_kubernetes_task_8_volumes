@@ -49,7 +49,23 @@ Create a kubernetes manifest for a pod which will containa ToDo app container:
     2. Mount existing secret as files into /app/secrets folder inside container. It should be a read-only mount
 1. `bootstrap.sh` should containe all the commands to deploy all the required resources in the cluster
 1. `README.md` should have instructuions on how to validate:
-    1. App is running
+    1. App is running -> Open in browser the following link: http://localhost:30007
     1. ConfigMap data is mounted as files in a right order
     1. Secret data is mounted as file
+
+Connect to the pod:
+```
+kubectl exec todoapp-{random characters} -it -n todoapp -- sh
+```
+
+Check the dir (it should contain configs and secrets):
+```
+ls
+```
+
+Check files in configs and secrets dirs:
+```
+ls
+```
+
 1. Create PR with your changes and attach it for validation on a platform.
