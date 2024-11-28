@@ -53,3 +53,53 @@ Create a Kubernetes manifest for a pod that will contain a ToDo app container:
     1. ConfigMap data is mounted as files in the right order
     1. Secret data is mounted as a file
 1. Create PR with your changes and attach it for validation on a platform.
+
+
+
+
+# ToDo App Deployment
+
+## How to Deploy
+
+1. Clone the repository and navigate to the directory containing the manifests.
+2. Run the `bootstrap.sh` script to deploy all resources:
+
+bootstrap.sh
+    
+
+## Validation Steps
+
+1. **App is running**:
+
+    Check if the pod is running:
+
+    kubectl get pods -n todoapp
+    
+    You should see a pod with the status `Running`.
+
+2. **ConfigMap data is mounted as files in a right order**:
+
+    Exec into the running pod and list the files in the `/app/configs` directory:
+
+
+    kubectl exec -it <pod-name> -n todoapp -- ls /app/configs
+
+
+    Verify that the expected files are present.
+
+3. **Secret data is mounted as file**:
+
+    Exec into the running pod and list the files in the `/app/secrets` directory:
+
+
+    kubectl exec -it <pod-name> -n todoapp -- ls /app/secrets
+
+
+    Verify that the expected files are present.
+
+4. **How Output `cat counter.txt` from a pod**:
+
+    Exec into the running pod and display the content of `counter.txt`:
+
+
+    kubectl exec -it <pod-name> -n todoapp -- cat /app/data/counter.txt
