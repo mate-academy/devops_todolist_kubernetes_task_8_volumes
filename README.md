@@ -53,3 +53,30 @@ Create a Kubernetes manifest for a pod that will contain a ToDo app container:
     1. ConfigMap data is mounted as files in the right order
     1. Secret data is mounted as a file
 1. Create PR with your changes and attach it for validation on a platform.
+
+### Solution
+
+### Applying all manifests:
+```bash
+./bootstrap.sh
+```
+
+### Check pods
+
+```commandline
+kubectl get pods
+```
+
+### Chek pvc data
+
+```commandline
+kubectl describe pvc pvc-data
+```
+### Check in browser
+[http://localhost:30007/]
+
+### Connect to the terminal of one of the pods
+
+```kubectl exec <pod-name> -it -- sh``` 
+
+```ls```
