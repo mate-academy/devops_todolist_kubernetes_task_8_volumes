@@ -53,3 +53,24 @@ Create a Kubernetes manifest for a pod that will contain a ToDo app container:
     1. ConfigMap data is mounted as files in the right order
     1. Secret data is mounted as a file
 1. Create PR with your changes and attach it for validation on a platform.
+
+
+
+1.  Create `pv.yml`
+2.  Create `pvc.yml`
+3.  Create `deployment.yml`
+
+    Creating bash with -->
+
+    # Apply PersistentVolume
+    kubectl apply -f pv.yml
+
+    # Apply PersistentVolumeClaim
+    kubectl apply -f pvc.yml
+
+    # Apply Deployment
+    kubectl apply -f deployment.yml
+
+    bash bootstrap.sh
+
+kubectl get deployments -n todoapp
