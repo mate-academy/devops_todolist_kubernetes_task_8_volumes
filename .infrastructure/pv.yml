@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: pv-data
+ namespace: todoapp
+spec:
+ storageClassName: standard
+ persistentVolumeReclaimPolicy: Delete
+ accessModes:
+   - ReadWriteMany
+ capacity:
+   storage: 1Gi
+ hostPath:
+   path: /var/lib/kubernetes/data/
+
