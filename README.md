@@ -53,3 +53,21 @@ Create a Kubernetes manifest for a pod that will contain a ToDo app container:
     1. ConfigMap data is mounted as files in the right order
     1. Secret data is mounted as a file
 1. Create PR with your changes and attach it for validation on a platform.
+
+
+kubectl config current-context
+In order to start the application you should execute in CLI the file bootstrap.sh
+After start the application will be access by url
+http://localhost:30007/
+
+Also you can start the application using the next coomands
+kind create cluster --config cluster.yml
+kubectl apply -f namespace.yml
+kubectl apply -f clusterIp.yml
+kubectl apply -f nodeport.yml
+kubectl apply -f configMap.yml
+kubectl apply -f secret.yml
+kubectl apply -f pv.yml
+kubectl apply -f pvc.yml
+kubectl apply -f deployment.yml
+kubectl apply -f hpa.yml
