@@ -4,7 +4,7 @@ echo "Creating namespace..."
 kubectl apply -f ./.infrastructure/namespace.yml
 
 echo "Applying ConfigMap..."
-kubectl apply -f ./.infrastructure/confgiMap.yml
+kubectl apply -f ./.infrastructure/configMap.yml
 
 echo "Applying Secrets..."
 kubectl apply -f ./.infrastructure/secret.yml
