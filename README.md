@@ -1,6 +1,6 @@
 # Django ToDo list
 
-This is a todo list web application with basic features of most web apps, i.e., accounts/login, API, and interactive UI. To do this task, you will need:
+This is a to-do list web application with the basic features of most web apps, i.e., accounts/login, API, and interactive UI. To do this task, you will need:
 
 - CSS | [Skeleton](http://getskeleton.com/)
 - JS | [jQuery](https://jquery.com/)
@@ -25,14 +25,14 @@ And then start the server (default is http://localhost:8000):
 python manage.py runserver
 ```
 
-Now you can browse the [API](http://localhost:8000/api/) or start on the [landing page](http://localhost:8000/).
+You can now browse the [API](http://localhost:8000/api/) or start on the [landing page](http://localhost:8000/).
 
 ## Task
 
-Create a kubernetes manifest for a pod which will containa ToDo app container:
+Create a Kubernetes manifest for a pod that will contain a ToDo app container:
 
 1. Fork this repository.
-2. Create a `pv.yml` file for `PersistentVolume` resource.
+2. Create a `pv.yml` file for the `PersistentVolume` resource.
 3. `PersistentVolume` requirements:
    1. `PersistentVolume` persistentVolumeReclaimPolicy `Delete`
    2. `PersistentVolume` class `standard`
