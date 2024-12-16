@@ -5,3 +5,4 @@ metadata:
   namespace: todoapp
 data:
   PYTHONUNBUFFERED: "1"
+  APP_ENV: "testing-volumes"
