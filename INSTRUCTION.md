@@ -15,6 +15,5 @@
     cat APP_ENV
     cd ..
     ls
-    
 
 ``
