@@ -74,5 +74,5 @@ spec:
           secret:
             secretName: app-secret
         - name: app-config-volume
-          secret:
-            secretName: app-config
+          configMap:
+            name: app-config
