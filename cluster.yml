@@ -45,9 +45,9 @@ nodes:
 # the two workers
 - role: worker
   extraMounts:
-    - hostPath: /tmp
+    - hostPath: D:/tmp
       containerPath: /data
 - role: worker
   extraMounts:
-    - hostPath: /tmp
+    - hostPath: D:/tmp
       containerPath: /data
