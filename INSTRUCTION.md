@@ -1,6 +1,6 @@
 # kubectl get pods -n todoapp
 ```bash
-  kubectl exec -it -n todoapp <name_of_pod> -- sh
+  kubectl exec -it -n todoapp busybox -- sh
 ```
 ```
 There must be `PYTHONUNBUFFERED` in `/app/configs`
