@@ -28,13 +28,13 @@ spec:
             memory: "256Mi"
             cpu: "150m"
         volumeMounts:
-          - name: todoapp
-            mountPath: /app/todoapp
-          - name: todoapp-secrets-volume
-            mountPath: /app/secrets
-            readOnly: true
-          - name: todoapp-config-volume
+          - name: data
+            mountPath: /app/data
+          - name: app-config-volume
             mountPath: /app/configs
+            readOnly: true
+          - name: app-secrets-volume
+            mountPath: /app/secrets
             readOnly: true
         env:
         - name: PYTHONUNBUFFERED
@@ -62,12 +62,12 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
       volumes:
-        - name: todoapp
+        - name: data
           persistentVolumeClaim:
-            claimName: pvc-todoapp
-        - name: todoapp-secrets-volume
+            claimName: pvc-data
+        - name: app-secrets-volume
           secret:
             secretName: app-secret
-        - name: todoapp-config-volume
+        - name: app-config-volume
           configMap:
             name: app-config
