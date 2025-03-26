@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-app
+  template:
+    metadata:
+      labels:
+        app: task-app
+    spec:
+      volumes:
+        - name: task-storage
+          persistentVolumeClaim:
+            claimName: task-pvc
+        - name: config-volume
+          configMap:
+            name: my-config
+        - name: secret-volume
+          secret:
+            secretName: my-secret
+      containers:
+        - name: task-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: task-storage
+              mountPath: /app/data
+            - name: config-volume
+              mountPath: /app/configs
+              readOnly: true
+            - name: secret-volume
+              mountPath: /app/secrets
+              readOnly: true
