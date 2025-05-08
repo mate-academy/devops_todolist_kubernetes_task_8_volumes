@@ -1,0 +1,13 @@
+apiVersion: v1                            # обов'язкове. Версія API для PersistentVolume
+kind: PersistentVolume                    # обов'язкове. Тип ресурсу (PersistentVolume — для зберігання персистентних даних)
+metadata:                                 # обов'язкове. Містить метадані об'єкта
+  name: todoapp-pv                        # обов'язкове. Унікальне ім'я об'єкта
+spec:                                     # обов'язкове. Специфікація для налаштування PersistentVolume
+  capacity:
+    storage: 1Gi                          # обов'язкове. Обсяг пам'яті, доступний для цього PersistentVolume
+  accessModes:
+    - ReadWriteOnce                       # обов'язкове. Тип доступу до об'єкта (ReadWriteOnce — доступ з одного вузла)
+  persistentVolumeReclaimPolicy: Delete   # обов'язкове. Політика утримання тома (Retain — залишити том після видалення PVC)
+  storageClassName: standard                # не обов'язкове. Ім'я класу зберігання
+  hostPath:
+    path: /mnt/data                       # обов'язкове. Шлях до локальної директорії на хості

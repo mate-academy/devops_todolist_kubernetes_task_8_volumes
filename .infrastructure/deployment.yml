@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todoapp
+  name: todoapp-deploy
   namespace: todoapp
 spec:
   strategy:
@@ -38,17 +38,37 @@ spec:
             secretKeyRef:
               name: app-secret
               key: SECRET_KEY
+        volumeMounts:                     # не обов'язкове. Монтує том до контейнера
+            - name: todoapp-pv             # ім'я тому (має співпадати з іменем у volumes)
+              mountPath: /app/data  # шлях у контейнері, куди буде змонтовано том
+            - name: config-volume
+              mountPath: /app/configs
+              readOnly: true
+            - name: secret-volume
+              mountPath: /app/secrets
+              readOnly: true
         ports:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: /api/health
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: api/ready
+            path: /api/ready
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:                              # не обов'язкове. Оголошення томів для пода
+        - name: todoapp-pv                 # ім'я тому (використовується у volumeMounts)
+          persistentVolumeClaim:           # використовує існуючий PVC
+            claimName: pvc-data               # ім'я PVC, який має бути створений окремо
+        - name: config-volume
+          configMap:
+            name: app-config
+        - name: secret-volume
+          secret:
+            secretName: app-secret
+
