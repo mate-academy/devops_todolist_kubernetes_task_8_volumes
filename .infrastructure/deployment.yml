@@ -17,9 +17,26 @@ spec:
       labels:
         app: todoapp
     spec:
+      volumes:
+        - name: task-pv-storage
+          persistentVolumeClaim:
+            claimName: pvc-data
+        - name: config-volume
+          configMap:
+            name: app-config
+        - name: secret-volume
+          secret:
+            secretName: app-secret
       containers:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
+        volumeMounts:
+          - mountPath: "/app/data"
+            name: task-pv-storage
+          - mountPath: /app/configs
+            name: config-volume
+          - mountPath: /app/secrets
+            name: secret-volume
         resources:
           requests:
             memory: "256Mi"
