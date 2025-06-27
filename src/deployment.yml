@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-deployment
+  labels:
+    app: todo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      volumes:
+        - name: todo-app-storage
+          persistentVolumeClaim:
+            claimName: todo-app-pvc
+        - name: config-volume
+          configMap:
+            name: todo-app-config
+        - name: secret-volume
+          secret:
+            secretName: todo-app-secret
+      containers:
+        - name: todo-app-container
+          image: leoleiden/todo-app:latest # Замініть на ім'я вашого Docker образу
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: todo-app-storage
+              mountPath: /app/data # Шлях для PersistentVolume
+            - name: config-volume
+              mountPath: /app/configs # Шлях для ConfigMap
+              readOnly: true
+            - name: secret-volume
+              mountPath: /app/secrets # Шлях для Secret
+              readOnly: true
+          # Якщо Django має бути налаштований на використання /app/data для db.sqlite3,
+          # вам потрібно буде оновити settings.py у вашому проекті Django.
+          # Наприклад: NAME = os.path.join(BASE_DIR, "data", "db.sqlite3")
+          # Оскільки Dockerfile вже виконує migrate, і db.sqlite3 буде в /app,
+          # для коректної роботи з PersistentVolume, потрібно переконатися, що база даних
+          # зберігається саме в /app/data. Це може вимагати зміни в settings.py
+          # або ручного переміщення db.sqlite3 після першого запуску, якщо ви не змінили settings.py.
+          # Для простоти, припускаємо, що програма зможе використовувати /app/data для бази даних.

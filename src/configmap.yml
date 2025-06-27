@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-app-config
+data:
+  config1.txt: |
+    # Це приклад конфігураційного файлу 1
+    APP_DEBUG=true
+    APP_ENV=development
+  config2.yaml: |
+    # Це приклад конфігураційного файлу 2
+    database:
+      type: sqlite
+      name: todo_db
