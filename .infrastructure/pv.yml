@@ -9,4 +9,5 @@ spec:
     - ReadWriteMany
   storageClassName: standard
   persistentVolumeReclaimPolicy: Delete
-  hostPath: /data
+  hostPath:
+    path: /data
