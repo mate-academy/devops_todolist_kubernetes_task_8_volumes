@@ -21,7 +21,7 @@ spec:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
         volumeMounts:
-          - name: app-secret-volume
+          - name: app-secrets-volume
             mountPath: "/app/secrets"
             readOnly: true
           - name: app-config-volume
