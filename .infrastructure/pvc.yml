@@ -4,6 +4,7 @@ metadata:
   name: pvc-volume
   namespace: todoapp
 spec:
+  storageClassName: standard
   volumeName: pv-volume
   accessModes:
     - ReadWriteMany
