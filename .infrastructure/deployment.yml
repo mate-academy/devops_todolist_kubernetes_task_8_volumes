@@ -2,13 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: todoapp
-  namespace: todoapp
+  namespace: mateapp
+  labels:
+    app: todoapp
 spec:
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+  replicas: 1
   selector:
     matchLabels:
       app: todoapp
@@ -18,37 +16,59 @@ spec:
         app: todoapp
     spec:
       containers:
-      - name: todoapp
-        image: ikulyk404/todoapp:3.0.0
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "150m"
-          limits:
-            memory: "256Mi"
-            cpu: "150m"
-        env:
-        - name: PYTHONUNBUFFERED
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: PYTHONUNBUFFERED
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: SECRET_KEY
-        ports:
-        - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: api/health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: api/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: todoapp
+          image: vitalysemeniv/todoapp:3.0.0
+          ports:
+            - containerPort: 8000
+          # (не обов'язково, але можна лишити env, якщо вони були в попередніх тасках)
+          env:
+            - name: PYTHONUNBUFFERED
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: PYTHONUNBUFFERED
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: todo-secret
+                  key: SECRET_KEY
+          readinessProbe:
+            httpGet:
+              path: /api/healthz/ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/healthz/live
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 5
+          volumeMounts:
+            # 1) Персистентні дані
+            - name: app-data
+              mountPath: /app/data
+            # 2) ConfigMap файлами (read-only)
+            - name: app-configs
+              mountPath: /app/configs
+              readOnly: true
+            # 3) Secret файлами (read-only)
+            - name: app-secrets
+              mountPath: /app/secrets
+              readOnly: true
+      volumes:
+        # PVC ↔ PV
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: todoapp-pvc
+        # ConfigMap як файли
+        - name: app-configs
+          configMap:
+            name: todo-config
+            # (не обов'язково) можна налаштувати права на файли
+            defaultMode: 0444
+        # Secret як файли
+        - name: app-secrets
+          secret:
+            name: todo-secret
+            defaultMode: 0444
