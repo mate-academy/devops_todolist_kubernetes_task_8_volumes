@@ -4,4 +4,6 @@ metadata:
   name: app-config
   namespace: todoapp
 data:
-  PYTHONUNBUFFERED: "1"
+  01-python-config: "PYTHONUNBUFFERED=1"
+  02-django-settings: "DEBUG=0"
+  03-app-config: "MAX_CONNECTIONS=100"
