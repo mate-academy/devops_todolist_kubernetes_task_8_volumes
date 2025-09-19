@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: todoapp
+data:
+  01-python.conf: |
+    PYTHONUNBUFFERED=1
+  02-db.conf: |
+    DB_HOST=localhost
+    DB_PORT=5432
+  03-app.conf: |
+    DEBUG=False

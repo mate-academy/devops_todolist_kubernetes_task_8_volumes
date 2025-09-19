@@ -32,7 +32,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: app-config
-              key: PYTHONUNBUFFERED
+              key: 01-python.conf
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
@@ -42,13 +42,41 @@ spec:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: /api/health
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: api/ready
+            path: /api/ready
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+        - name: todo-storage
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
+      volumes:
+      - name: todo-storage
+        persistentVolumeClaim:
+          claimName: todo-pvc
+      - name: config-volume
+        configMap:
+          name: app-config
+          defaultMode: 0444
+          items:
+            - key: 01-python.conf
+              path: 01-python.conf
+            - key: 02-db.conf
+              path: 02-db.conf
+            - key: 03-app.conf
+              path: 03-app.conf
+      - name: secret-volume
+        secret:
+          secretName: app-secret
+          defaultMode: 0400
