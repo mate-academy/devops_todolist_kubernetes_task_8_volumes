@@ -27,6 +27,15 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "150m"
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: app-secrets-volume
+          mountPath: /app/secrets
+          readOnly: true
+        - name: app-config-volume
+          mountPath: /app/configs
+          readOnly: true
         env:
         - name: PYTHONUNBUFFERED
           valueFrom:
@@ -38,17 +47,37 @@ spec:
             secretKeyRef:
               name: app-secret
               key: SECRET_KEY
+        - name: EXTERNAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: external_endpoint
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_ENV
         ports:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: /api/health
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: api/ready
+            path: /api/ready
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pvc-data
+      - name: app-secrets-volume
+        secret:
+          secretName: app-secret
+      - name: app-config-volume
+        configMap:
+          name: app-config
