@@ -36,7 +36,7 @@ spec:
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: app-secret
+              name: app-secrets
               key: SECRET_KEY
         ports:
         - containerPort: 8080
@@ -50,5 +50,25 @@ spec:
           httpGet:
             path: api/ready
             port: 8080
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
           periodSeconds: 5
+        volumeMounts:
+          - name: data
+            mountPath: "/app/data"
+          - name: app-config-volume
+            mountPath: "/app/configs"
+            readOnly: true
+          - name: app-secrets-volume
+            mountPath: "/app/secrets"
+            readOnly: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pvc-data
+        - name: app-config-volume
+          configMap:
+            name: app-config
+        - name: app-secrets-volume
+          secret:
+            secretName: app-secrets
+        
