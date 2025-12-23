@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: data-volume
           persistentVolumeClaim:
-            claimName: pvc-data
+            claimName: standard
         - name: app-secrets-volume
           secret:
             secretName: app-secrets
