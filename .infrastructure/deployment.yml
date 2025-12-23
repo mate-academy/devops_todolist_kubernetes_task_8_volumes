@@ -29,7 +29,6 @@ spec:
           - name: app-config-volume
             mountPath: "/app/configs"
             readOnly: true
-        command: ["/bin/sh", "/app/configs/bootstrap.sh"]
         resources:
           requests:
             memory: "256Mi"
