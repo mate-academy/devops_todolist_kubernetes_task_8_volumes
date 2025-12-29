@@ -5,7 +5,7 @@ set -euo pipefail
 kubectl create namespace todoapp --dry-run=client -o yaml | kubectl apply -f -
 
 # Apply resources
-kubectl apply -f .infrastructure/confgiMap.yml
+kubectl apply -f .infrastructure/configMap.yml
 kubectl apply -f .infrastructure/secret.yml
 kubectl apply -f pv.yml
 kubectl apply -f pvc.yml
