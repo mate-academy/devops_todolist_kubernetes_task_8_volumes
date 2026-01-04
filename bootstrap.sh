@@ -1,46 +1,20 @@
-#!/bin/bash
-
+#!/bin/sh
 set -e
 
-
-# BOOTSTRAP SCRIPT
-# Deploy all required Kubernetes resources
-
-echo "Creating namespaces (if not exist)..."
 kubectl create namespace todoapp || true
 kubectl create namespace mateapp || true
 
+kubectl apply -f .infrastructure/configMap.yml
+kubectl apply -f .infrastructure/secret.yml
 
-echo "Applying ConfigMap..."
-kubectl apply -f configMap.yml
+kubectl apply -f .infrastructure/pv.yml
+kubectl apply -f .infrastructure/pvc.yml
 
-echo "Applying Secret..."
-kubectl apply -f secret.yml
+kubectl apply -f .infrastructure/deployment.yml
+kubectl apply -f .infrastructure/daemonset.yml
+kubectl apply -f .infrastructure/cronjob.yml
 
-
-echo "Applying PersistentVolume..."
-kubectl apply -f pv.yml
-
-echo "Applying PersistentVolumeClaim..."
-kubectl apply -f pvc.yml
-
-
-echo "Applying Deployment..."
-kubectl apply -f deployment.yml
-
-
-echo "Applying DaemonSet..."
-kubectl apply -f daemonset.yml
-
-
-echo "Applying CronJob..."
-kubectl apply -f cronjob.yml
-
-
-echo "Deployment completed"
-
-echo "Current resources status:"
 kubectl get all -n todoapp
 kubectl get all -n mateapp
 kubectl get pv
-kubectl get pvc -n mateapp
+kubectl get pvc -n todoapp

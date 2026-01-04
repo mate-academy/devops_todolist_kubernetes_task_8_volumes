@@ -39,6 +39,8 @@ spec:
                   name: app-secrets
                   key: SECRET_KEY
           volumeMounts:
+            - name: app-data
+              mountPath: /app/data
             - name: config-volume
               mountPath: /app/configs
               readOnly: true
@@ -60,10 +62,12 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 5
       volumes:
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: pvc-data
         - name: config-volume
           configMap:
             name: app-config
         - name: secret-volume
           secret:
             secretName: app-secrets
-
