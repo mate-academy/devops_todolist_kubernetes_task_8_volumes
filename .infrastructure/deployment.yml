@@ -1,9 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todoapp
+  name: todoapp-deployment
   namespace: todoapp
+  labels:
+    app: todoapp
 spec:
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,14 +23,13 @@ spec:
       containers:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "150m"
-          limits:
-            memory: "256Mi"
-            cpu: "150m"
+        ports:
+        - containerPort: 8080
+
         env:
+        - name: EXTERNAL_ENDPOINT
+          value: "http://httpbin-api.mateapp.svc.cluster.local"
+
         - name: PYTHONUNBUFFERED
           valueFrom:
             configMapKeyRef:
@@ -38,8 +40,24 @@ spec:
             secretKeyRef:
               name: app-secret
               key: SECRET_KEY
-        ports:
-        - containerPort: 8080
+
+        volumeMounts:
+        - name: storage-volume
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "150m"
+          limits:
+            memory: "256Mi"
+            cpu: "150m"
         livenessProbe:
           httpGet:
             path: api/health
@@ -52,3 +70,14 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+
+      volumes:
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: todoapp-pvc
+      - name: config-volume
+        configMap:
+          name: app-config
+      - name: secret-volume
+        secret:
+          secretName: app-secret
