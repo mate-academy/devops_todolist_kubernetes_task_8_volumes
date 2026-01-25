@@ -34,7 +34,7 @@ kubectl get secret -n todoapp
 
 ### 5. ConfigMap
 ```bash
-kubectl apply -f .infrastructure/confgiMap.yml -n todoapp
+kubectl apply -f .infrastructure/configMap.yml -n todoapp
 kubectl get configMap -n todoapp
 ```
 
