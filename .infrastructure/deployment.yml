@@ -55,8 +55,19 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /app/data
-
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: pvc-data
+      - name: config-volume
+        configMap:
+          name: app-config
+      - name: secret-volume
+        secret:
+          secretName: app-secret
