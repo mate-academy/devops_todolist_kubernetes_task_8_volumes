@@ -4,5 +4,7 @@ go to browser: localhost:8080
 kubectl get pods -n todoapp
 
 kubectl exec -it <pod> --sh
-view app/secrets
-view app/configs
+cd /app/secrets
+cat <secret>
+cd /app/configs
+cat <config>

@@ -2,7 +2,7 @@
 kubectl apply -f .infrastructure/namespace.yml
 kubectl apply -f .infrastructure/configmap.yml -n todoapp
 kubectl apply -f .infrastructure/secret.yml -n todoapp
-kubectl apply -f .infrastructure/pv.yml -n todoapp
+kubectl apply -f .infrastructure/pv.yml
 kubectl apply -f .infrastructure/pvc.yml -n todoapp
 kubectl apply -f .infrastructure/deployment.yml -n todoapp
 kubectl apply -f .infrastructure/clusterIp.yml -n todoapp
