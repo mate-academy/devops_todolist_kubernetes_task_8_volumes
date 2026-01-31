@@ -4,7 +4,7 @@
 kubectl apply -f .infrastructure/namespace.yml
 
 # Apply ConfigMap
-kubectl apply -f .infrastructure/confgiMap.yml
+kubectl apply -f .infrastructure/configMap.yml
 
 # Apply Secrets
 kubectl apply -f .infrastructure/secret.yml

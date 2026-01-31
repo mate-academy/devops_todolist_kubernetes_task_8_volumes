@@ -15,7 +15,7 @@ kubectl exec -it -n todoapp "pod_name" -- sh
 ```
 commands to see configs and secrets mounting folders
 ```bash
-ls /configs
-ls /secrets
+ls /app/configs
+ls /app/secrets
 ```
 
