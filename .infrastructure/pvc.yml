@@ -9,3 +9,4 @@ spec:
   accessModes:
     - ReadWriteMany
   volumeName: pv-storage
+  storageClassName: standard
