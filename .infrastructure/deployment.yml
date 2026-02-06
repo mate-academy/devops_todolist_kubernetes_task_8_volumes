@@ -1,54 +1,82 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todoapp
-  namespace: todoapp
+  name: todoapp-deployment
+  namespace: mateapp
+  labels:
+    app: todolist
 spec:
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
-      app: todoapp
+      app: todolist
   template:
     metadata:
       labels:
-        app: todoapp
+        app: todolist
     spec:
       containers:
       - name: todoapp
-        image: ikulyk404/todoapp:3.0.0
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "150m"
-          limits:
-            memory: "256Mi"
-            cpu: "150m"
+        image: d4vp/todoapp:3.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
         env:
+        - name: DEBUG
+          value: "True"
+        - name: ALLOWED_HOSTS
+          value: "*"
         - name: PYTHONUNBUFFERED
           valueFrom:
             configMapKeyRef:
-              name: app-config
+              name: todo-config
               key: PYTHONUNBUFFERED
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: app-secret
+              name: todo-secret
               key: SECRET_KEY
-        ports:
-        - containerPort: 8080
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: todo-storage
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
+
         livenessProbe:
           httpGet:
-            path: api/health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 5
+            path: /api/liveness/
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: api/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+            path: /api/ready/
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 10
+      volumes:
+      - name: todo-storage
+        persistentVolumeClaim:
+          claimName: todo-pvc
+      - name: config-volume
+        configMap:
+          name: todo-config
+      - name: secret-volume
+        secret:
+          secretName: todo-secret
