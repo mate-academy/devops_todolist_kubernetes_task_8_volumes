@@ -17,9 +17,28 @@ spec:
       labels:
         app: todoapp
     spec:
+      volumes:
+      - name: pv-mate
+        persistentVolumeClaim: 
+          claimName: pvc-mate
+      - name: app-secret
+        secret: 
+          secretName: app-secret
+      - name: app-config
+        configMap:
+          name: app-config
       containers:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
+        volumeMounts:
+        - name: pv-mate
+          mountPath: /app/data
+        - name: app-secret
+          mountPath: "/app/secrets"
+          readOnly: true
+        - name: app-config
+          mountPath: "/app/configs"
+          readOnly: true
         resources:
           requests:
             memory: "256Mi"
