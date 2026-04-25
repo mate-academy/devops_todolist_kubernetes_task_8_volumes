@@ -4,6 +4,7 @@ metadata:
   name: todoapp
   namespace: todoapp
 spec:
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -27,28 +28,36 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "150m"
-        env:
-        - name: PYTHONUNBUFFERED
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: PYTHONUNBUFFERED
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: SECRET_KEY
         ports:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: /api/health
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: api/ready
+            path: /api/ready
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+        - name: data-storage
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
+      volumes:
+      - name: data-storage
+        persistentVolumeClaim:
+          claimName: todoapp-pvc
+      - name: config-volume
+        configMap:
+          name: app-config
+      - name: secret-volume
+        secret:
+          secretName: app-secret
