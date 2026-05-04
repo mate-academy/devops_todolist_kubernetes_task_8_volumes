@@ -1,7 +1,7 @@
 # Validation Instructions
 ## 1. Check if app is running
 ```bash
-kubectl get pods -n todoapp
+kubectl exec -it <pod-name> -n todoapp -- ls -la /app/data
 kubectl get svc -n todoapp
 2. Verify ConfigMap is mounted
 kubectl exec -it <pod-name> -n todoapp -- ls -la /app/configs
