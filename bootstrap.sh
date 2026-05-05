@@ -10,7 +10,7 @@ kubectl apply -f .infrastructure/pv.yml
 kubectl apply -f .infrastructure/pvc.yml
 
 # Apply ConfigMap
-kubectl apply -f .infrastructure/confgiMap.yml
+kubectl apply -f .infrastructure/configMap.yml
 
 # Apply Secret
 kubectl apply -f .infrastructure/secret.yml
