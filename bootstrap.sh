@@ -12,6 +12,6 @@ echo "Deploying application..."
 kubectl apply -f deployment.yml
 
 echo "Waiting for deployment rollout..."
-kubectl rollout status deployment/todo-app
+kubectl rollout status deployment/todoapp
 
 echo "Deployment completed successfully."
