@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: persistent-volume-claim
+  namespace: todoapp
+spec:
+  volumeName: persistent-volume
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 0.5Gi
