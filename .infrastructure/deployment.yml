@@ -27,6 +27,15 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "150m"
+        volumeMounts:
+          - name: todoapp-volume
+            mountPath: /app/data
+          - name: app-config
+            mountPath: /app/configs
+            readOnly: true
+          - name: app-secret
+            mountPath: /app/secrets
+            readOnly: true
         env:
         - name: PYTHONUNBUFFERED
           valueFrom:
@@ -52,3 +61,13 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+        - name: todoapp-volume
+          persistentVolumeClaim:
+            claimName: pvc-volume
+        - name: app-config
+          configMap:
+            name: app-config
+        - name: app-secret
+          secret:
+            secretName: app-secret
