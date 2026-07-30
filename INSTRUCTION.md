@@ -35,6 +35,11 @@ kubectl get pods -n todoapp
 ```bash
 kubectl exec -n todoapp -it <pod-name> -- sh
 ```
+### Verify the application is running by checking the health endpoint:
+
+```bash
+curl http://localhost:8080/api/health
+```
 
 ### Check the mounted directories and read the files:
 
