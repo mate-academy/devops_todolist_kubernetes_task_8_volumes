@@ -5,6 +5,7 @@ metadata:
   namespace: todoapp
 spec:
   volumeName: pv-todoapp
+  storageClassName: standard
   accessModes:
     - ReadWriteMany
   resources:
