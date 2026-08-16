@@ -21,10 +21,13 @@ spec:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
         volumeMounts:
-          - name: app-secrets-volume
+          - name: todoapp
+            mountPath: /app/data
+            readOnly: false
+          - name: secret
             mountPath: /app/secrets
             readOnly: true
-          - name: app-config-volume
+          - name: config
             mountPath: /app/configs
             readOnly: true
         resources:
@@ -63,9 +66,9 @@ spec:
         - name: todoapp
           persistentVolumeClaim:
             claimName: pvc-todoapp
-        - name: app-secrets-volume
+        - name: secret
           secret:
             secretName: app-secret
-        - name: app-config-volume
+        - name: config
           configMap:
-            secretName: app-config
+            name: app-config
