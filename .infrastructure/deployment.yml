@@ -20,6 +20,16 @@ spec:
       containers:
       - name: todoapp
         image: ikulyk404/todoapp:3.0.0
+        volumeMounts:
+          - name: todoapp
+            mountPath: /app/data
+            readOnly: false
+          - name: secret
+            mountPath: /app/secrets
+            readOnly: true
+          - name: config
+            mountPath: /app/configs
+            readOnly: true
         resources:
           requests:
             memory: "256Mi"
@@ -42,13 +52,23 @@ spec:
         - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: api/health
+            path: /api/health
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: api/ready
+            path: /api/ready
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+      volumes:
+        - name: todoapp
+          persistentVolumeClaim:
+            claimName: pvc-todoapp
+        - name: secret
+          secret:
+            secretName: app-secret
+        - name: config
+          configMap:
+            name: app-config
