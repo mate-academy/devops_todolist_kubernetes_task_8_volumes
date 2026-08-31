@@ -52,3 +52,23 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
+        volumeMounts:
+        - name: todoapp-storage
+          mountPath: /app/data
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
+      volumes:
+      - name: todoapp-storage
+        persistentVolumeClaim:
+          claimName: todoapp-pvc
+      - name: config-volume
+        configMap:
+          name: app-config
+      - name: secret-volume
+        secret:
+          secretName: app-secret
+
