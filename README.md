@@ -32,14 +32,14 @@ You can now browse the [API](http://localhost:8000/api/) or start on the [landin
 Create a Kubernetes manifest for a pod that will contain a ToDo app container:
 
 1. Fork this repository.
-2. Create a `pv_tr.yml` file for the `PersistentVolume` resource.
+2. Create a `pv.yml` file for the `PersistentVolume` resource.
 3. `PersistentVolume` requirements:
     1. `PersistentVolume` persistentVolumeReclaimPolicy `Delete`
     2. `PersistentVolume` class `standard`
     3. `PersistentVolume` accessModes `ReadWriteMany`
     4. `PersistentVolume` capacity `1Gi`
     5. `PersistentVolume` should use `hostPath`
-1. Create a `pvc-tr.yml` file for the `PersitentVolumeClaim` resource.
+1. Create a `pvc.yml` file for the `PersitentVolumeClaim` resource.
 1. `PersitentVolumeClaim` requirements:
     1. `PersitentVolumeClaim` should claim a `PersistentVolume` from a pvc file.
     2. `Deployment` should use `PersistentVolume` through the `PersitentVolumeClaim`
