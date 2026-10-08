@@ -1,54 +1,56 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todoapp
-  namespace: todoapp
+  name: todoapp-deployment
+  namespace: mateapp
+  labels:
+    app: todolist
 spec:
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
-      app: todoapp
+      app: todolist
   template:
     metadata:
       labels:
-        app: todoapp
+        app: todolist
     spec:
       containers:
-      - name: todoapp
-        image: ikulyk404/todoapp:3.0.0
+      - name: todoapp-container
+        image: vitsheo/todoapp:3.0.0
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        # Монтуємо постійний диск для даних додатку
+        - name: todoapp-storage
+          mountPath: /app/data
+        # Монтуємо ConfigMap як файли лише для читання
+        - name: config-volume
+          mountPath: /app/configs
+          readOnly: true
+        # Монтуємо Secret як файли лише для читання
+        - name: secret-volume
+          mountPath: /app/secrets
+          readOnly: true
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "150m"
+            memory: "64Mi"
+            cpu: "100m"
           limits:
-            memory: "256Mi"
-            cpu: "150m"
-        env:
-        - name: PYTHONUNBUFFERED
-          valueFrom:
-            configMapKeyRef:
-              name: app-config
-              key: PYTHONUNBUFFERED
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: SECRET_KEY
-        ports:
-        - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: api/health
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: api/ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+            memory: "128Mi"
+            cpu: "200m"
+      volumes:
+      - name: todoapp-storage
+        persistentVolumeClaim:
+          claimName: todoapp-pvc
+      - name: config-volume
+        configMap:
+          name: todoapp-config
+      - name: secret-volume
+        secret:
+          secretName: todoapp-secret
