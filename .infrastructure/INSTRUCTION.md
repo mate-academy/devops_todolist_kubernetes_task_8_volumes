@@ -7,10 +7,10 @@ kubectl get svc
 
 ## 2. ConfigMap mounted as files
 ```
-kubectl exec -it <pod-name> -- ls -la /app/config/
+kubectl exec -it <pod-name> -- ls -la /app/configs/
 ```
 
 ## 3. Secrets mounted as files
 ```
-kubectl exec -it <pod-name> -- ls -la /app/secret/
+kubectl exec -it <pod-name> -- ls -la /app/secrets/
 ```
