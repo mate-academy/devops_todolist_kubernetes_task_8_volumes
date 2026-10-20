@@ -25,8 +25,10 @@ spec:
             mountPath: /app/data
           - name: config-volume
             mountPath: /app/configs
+            readOnly: true
           - name: secret-volume
             mountPath: /app/secrets
+            readOnly: true
         resources:
           requests:
             memory: "256Mi"
