@@ -119,16 +119,54 @@ Then open <http://localhost:8086/>. If the image exposes the expected Django hea
 curl -i http://localhost:8086/api/health
 ```
 
-## 5. Verify ConfigMap is mounted as a file
+## 5. Verify ConfigMap files and their order
 
-The ConfigMap `app-config` must be mounted read-only into `/app/configs`. Confirm its key is represented as a file and inspect the non-secret value:
+The existing ConfigMap `app-config` must be mounted as **read-only files** in `/app/configs`. Kubernetes creates a file named after each ConfigMap data key. **Directory-entry order is not guaranteed**: for a reproducible comparison, sort both the ConfigMap keys and the mounted filenames alphabetically, then compare them.
+
+**Step 1 — Inspect the source keys in sorted order:**
 
 ```bash
-kubectl exec -n todoapp deployment/todoapp -- ls -l /app/configs
+kubectl get configmap app-config -n todoapp \
+  -o go-template='{{range $key, $value := .data}}{{printf "%s\n" $key}}{{end}}' \
+  | LC_ALL=C sort
+```
+
+**Step 2 — Inspect all mounted ConfigMap filenames in the same order:**
+
+```bash
+kubectl exec -n todoapp deployment/todoapp -- \
+  sh -c 'for f in /app/configs/*; do [ -f "$f" ] && basename "$f"; done' \
+  | LC_ALL=C sort
+```
+
+For the current `app-config`, both commands should print `PYTHONUNBUFFERED` (one line). If the ConfigMap later contains several keys, both outputs must list all of them in the **same alphabetical order**.
+
+**Step 3 — Compare source keys with mounted filenames automatically (run in bash or zsh):**
+
+```bash
+diff -u \
+  <(kubectl get configmap app-config -n todoapp \
+      -o go-template='{{range $key, $value := .data}}{{printf "%s\n" $key}}{{end}}' \
+      | LC_ALL=C sort) \
+  <(kubectl exec -n todoapp deployment/todoapp -- \
+      sh -c 'for f in /app/configs/*; do [ -f "$f" ] && basename "$f"; done' \
+      | LC_ALL=C sort)
+```
+
+**Expected:** `diff` produces no output and exits with status `0`. This confirms that **every ConfigMap key has a corresponding file** and there are no extra visible files in the mounted directory. Sorting makes the comparison deterministic; Kubernetes does not guarantee a particular filesystem listing order.
+
+**Step 4 — Verify that the file contains the ConfigMap value:**
+
+```bash
+kubectl get configmap app-config -n todoapp -o jsonpath='{.data.PYTHONUNBUFFERED}'; echo
 kubectl exec -n todoapp deployment/todoapp -- cat /app/configs/PYTHONUNBUFFERED
 ```
 
-Expected value: `1` (assuming that is the current value of `PYTHONUNBUFFERED`).
+Both values should be `1` for the provided configuration. Confirm `readOnly: true` for `/app/configs` in `deployment.yml` or by inspecting the deployed manifest:
+
+```bash
+kubectl get deployment todoapp -n todoapp -o yaml
+```
 
 ## 6. Verify Secret is mounted as a file
 
